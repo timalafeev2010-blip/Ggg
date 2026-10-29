@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Сайты для мастеров — сантехников, электриков, ремонтников</title>
+  <meta name="description" content="Простой сайт-визитка для частного мастера: фото работ, кнопка «Позвонить», отзывы. От 5 000 ₽.">
+  <style>
+    /* ---------- Темы ---------- */
+    :root, [data-theme="light"] {
+      --bg: #ffffff;
+      --bg-alt: #f3f4f6;
+      --text: #111827;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --accent: #f59e0b;
+      --accent-text: #111827;
+    }
+    [data-theme="dark"] {
+      --bg: #0b0b0c;
+      --bg-alt: #161618;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --card: #1c1c1f;
+      --border: #2a2a2e;
+      --accent: #fbbf24;
+      --accent-text: #111827;
+    }
+    [data-theme="gray"] {
+      --bg: #9ca3af;
+      --bg-alt: #8b929c;
+      --text: #111827;
+      --muted: #1f2937;
+      --card: #d1d5db;
+      --border: #6b7280;
+      --accent: #111827;
+      --accent-text: #f9fafb;
+    }
+
+    /* ---------- База ---------- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background .3s, color .3s;
+      padding-bottom: 80px; /* место под нижнюю кнопку на телефоне */
+    }
+    a { color: inherit; }
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+    section { padding: 64px 0; }
+    section:nth-of-type(even) { background: var(--bg-alt); }
+    h1 { font-size: clamp(28px, 5vw, 48px); line-height: 1.15; margin-bottom: 16px; }
+    h2 { font-size: clamp(24px, 3.5vw, 34px); margin-bottom: 24px; }
+    h3 { font-size: 20px; margin-bottom: 8px; }
+    p.lead { font-size: 18px; color: var(--muted); max-width: 640px; }
+
+    /* ---------- Шапка ---------- */
+    header {
+      position: sticky; top: 0; z-index: 10;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      transition: background .3s;
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; height: 64px;
+    }
+    .logo { font-weight: 800; font-size: 20px; text-decoration: none; }
+    .logo span { color: var(--accent); }
+    [data-theme="gray"] .logo span { color: #f9fafb; }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-weight: 500; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-right { display: flex; gap: 10px; align-items: center; }
+
+    /* ---------- Кнопки ---------- */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 24px; border-radius: 12px;
+      font-weight: 700; font-size: 16px; text-decoration: none;
+      border: 2px solid transparent; cursor: pointer;
+      transition: transform .15s, opacity .15s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); opacity: .85; }
+    .btn-call { background: var(--accent); color: var(--accent-text); }
+    .btn-outline { background: transparent; color: var(--text); border-color: var(--border); }
+    .btn-small { padding: 8px 14px; font-size: 14px; border-radius: 10px; }
+
+    .theme-toggle {
+      background: var(--card); color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 12px; border-radius: 10px;
+      cursor: pointer; font-size: 14px; font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* ---------- Первый экран ---------- */
+    .hero { padding: 80px 0 64px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+    .badge {
+      background: var(--card); border: 1px solid var(--border);
+      padding: 6px 12px; border-radius: 999px; font-size: 14px; color: var(--muted);
+    }
+
+    /* ---------- Сетки и карточки ---------- */
+    .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px;
+      transition: background .3s, border-color .3s;
+    }
+    .card p { color: var(--muted); }
+    .icon { font-size: 32px; margin-bottom: 12px; }
+
+    /* ---------- Примеры ---------- */
+    .example { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+    .example-img {
+      height: 160px; display: flex; align-items: center; justify-content: center;
+      font-size: 56px;
+    }
+    .ex1 { background: linear-gradient(135deg, #3b82f6, #1e3a8a); }
+    .ex2 { background: linear-gradient(135deg, #f59e0b, #b45309); }
+    .ex3 { background: linear-gradient(135deg, #10b981, #065f46); }
+    .example-body { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+    .example-body .btn { margin-top: auto; align-self: flex-start; }
+
+    /* ---------- Цены ---------- */
+    .price { font-size: 32px; font-weight: 800; margin: 8px 0; }
+    .price small { font-size: 16px; font-weight: 500; color: var(--muted); }
+    .card ul { list-style: none; margin-top: 12px; }
+    .card li { padding: 6px 0 6px 26px; position: relative; color: var(--muted); }
+    .card li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 800; }
+    [data-theme="gray"] .card li::before { color: #111827; }
+    .card.featured { border: 2px solid var(--accent); }
+
+    /* ---------- Шаги ---------- */
+    .steps { counter-reset: step; }
+    .step { position: relative; padding-left: 64px; }
+    .step::before {
+      counter-increment: step; content: counter(step);
+      position: absolute; left: 20px; top: 24px;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); color: var(--accent-text);
+      display: flex; align-items: center; justify-content: center; font-weight: 800;
+    }
+
+    /* ---------- Вопросы ---------- */
+    details {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 20px; margin-bottom: 12px;
+    }
+    summary { cursor: pointer; font-weight: 700; }
+    details p { margin-top: 10px; color: var(--muted); }
+
+    /* ---------- Контакты ---------- */
+    .contact { text-align: center; }
+    .contact .lead { margin: 0 auto 28px; }
+    .phone-big { font-size: clamp(26px, 5vw, 40px); font-weight: 800; text-decoration: none; display: inline-block; margin-bottom: 24px; }
+    .socials { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+    .social {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 20px; border-radius: 12px;
+      font-weight: 700; text-decoration: none; color: #fff;
+      transition: transform .15s;
+    }
+    .social:hover { transform: translateY(-2px); }
+    .social svg { width: 22px; height: 22px; fill: currentColor; }
+    .wa { background: #25d366; }
+    .tg { background: #229ed9; }
+    .vb { background: #7360f2; }
+    .sms { background: #4b5563; }
+
+    footer { padding: 28px 0; text-align: center; color: var(--muted); font-size: 14px; border-top: 1px solid var(--border); }
+
+    /* ---------- Кнопка снизу на телефоне ---------- */
+    .sticky-call {
+      display: none;
+      position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 20;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+    }
+
+    @media (max-width: 760px) {
+      .nav-links { display: none; }
+      .nav-right .btn-call { display: none; }
+      .sticky-call { display: flex; }
+      section { padding: 48px 0; }
+      .hero { padding: 48px 0; }
+    }
+    @media (min-width: 761px) { body { padding-bottom: 0; } }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Шапка ===== -->
+  <header>
+    <div class="container nav">
+      <a href="#top" class="logo">Мастер<span>.</span>Сайт</a>
+      <nav class="nav-links">
+        <a href="#what">Что делаем</a>
+        <a href="#examples">Примеры</a>
+        <a href="#prices">Цены</a>
+        <a href="#contact">Контакты</a>
+      </nav>
+      <div class="nav-right">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Сменить тему">☀️ Белая</button>
+        <a href="tel:+79000000000" class="btn btn-call btn-small">📞 Позвонить</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ===== Первый экран ===== -->
+    <section class="hero">
+      <div class="container">
+        <h1>Сайт для мастера, которому доверяют и платят больше</h1>
+        <p class="lead">
+          Делаем простые сайты для сантехников, электриков, ремонтников и строителей.
+          Одна страница, фото ваших работ и кнопка «Позвонить». Клиент видит, что вы
+          настоящий мастер, а не очередное объявление.
+        </p>
+        <div class="hero-actions">
+          <a href="tel:+79000000000" class="btn btn-call">📞 Позвонить</a>
+          <a href="#examples" class="btn btn-outline">Посмотреть примеры</a>
+        </div>
+        <div class="badges">
+          <span class="badge">от 5 000 ₽</span>
+          <span class="badge">готово за несколько дней</span>
+          <span class="badge">удобно с телефона</span>
+          <span class="badge">быстро открывается</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Проблема ===== -->
+    <section>
+      <div class="container">
+        <h2>Хороший мастер без сайта теряет клиентов</h2>
+        <div class="grid">
+          <div class="card">
+            <div class="icon">🔍</div>
+            <h3>Вас не находят</h3>
+            <p>Новые клиенты ищут мастера в интернете. Если вас там нет, звонят другим.</p>
+          </div>
+          <div class="card">
+            <div class="icon">📋</div>
+            <h3>Вы теряетесь среди объявлений</h3>
+            <p>На досках объявлений сотни одинаковых карточек. Клиент выбирает того, кто дешевле.</p>
+          </div>
+          <div class="card">
+            <div class="icon">🤝</div>
+            <h3>Нечем показать опыт</h3>
+            <p>Фото работ и отзывы в одном месте убеждают лучше любых слов. С ними можно брать дороже.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Что делаем ===== -->
+    <section id="what">
+      <div class="container">
+        <h2>Что вы получаете</h2>
+        <div class="grid">
+          <div class="card">
+            <div class="icon">📄</div>
+            <h3>Одностраничный сайт</h3>
+            <p>Кто вы, какие работы делаете, цены и контакты. Ничего лишнего.</p>
+          </div>
+          <div class="card">
+            <div class="icon">📸</div>
+            <h3>Фото ваших работ</h3>
+            <p>Покажем лучшие объекты, чтобы клиент сразу увидел качество.</p>
+          </div>
+          <div class="card">
+            <div class="icon">📞</div>
+            <h3>Кнопка «Позвонить»</h3>
+            <p>Клиент нажимает и сразу звонит вам. Плюс кнопки WhatsApp, Telegram и Viber.</p>
+          </div>
+          <div class="card">
+            <div class="icon">⭐</div>
+            <h3>Карточки в сервисах с отзывами</h3>
+            <p>Добавим вас в местные карты и каталоги с отзывами. Это даёт дополнительные заявки.</p>
+          </div>
+          <div class="card">
+            <div class="icon">⚡</div>
+            <h3>Быстрый сайт без конструктора</h3>
+            <p>Пишем вручную на простом коде. Сайт быстро открывается даже с телефона, и вы не платите за конструктор.</p>
+          </div>
+          <div class="card">
+            <div class="icon">🛠️</div>
+            <h3>Поддержка каждый месяц</h3>
+            <p>Следим, чтобы сайт работал, обновляем цены и фото по вашей просьбе.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Примеры ===== -->
+    <section id="examples">
+      <div class="container">
+        <h2>Примеры сайтов</h2>
+        <p class="lead" style="margin-bottom:24px">Откройте пример и представьте на его месте своё имя и свои работы.</p>
+        <div class="grid">
+          <div class="card example">
+            <div class="example-img ex1">🚿</div>
+            <div class="example-body">
+              <h3>Сантехник</h3>
+              <p>Установка и ремонт сантехники, срочный выезд, фото объектов, цены на основные работы.</p>
+              <a href="#" class="btn btn-outline btn-small">Открыть пример →</a>
+            </div>
+          </div>
+          <div class="card example">
+            <div class="example-img ex2">💡</div>
+            <div class="example-body">
+              <h3>Электрик</h3>
+              <p>Проводка, щитки, розетки и освещение. Отзывы клиентов и кнопка вызова.</p>
+              <a href="#" class="btn btn-outline btn-small">Открыть пример →</a>
+            </div>
+          </div>
+          <div class="card example">
+            <div class="example-img ex3">🔨</div>
+            <div class="example-body">
+              <h3>Ремонт и отделка</h3>
+              <p>Фото «до и после», этапы работ и примерная стоимость за метр.</p>
+              <a href="#" class="btn btn-outline btn-small">Открыть пример →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Цены ===== -->
+    <section id="prices">
+      <div class="container">
+        <h2>Цены</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Простой</h3>
+            <div class="price">5 000 ₽</div>
+            <ul>
+              <li>Одна страница</li>
+              <li>До 6 фото работ</li>
+              <li>Кнопка «Позвонить» и мессенджеры</li>
+              <li>Адаптация под телефон</li>
+            </ul>
+          </div>
+          <div class="card featured">
+            <h3>Доверие</h3>
+            <div class="price">10 000 ₽</div>
+            <ul>
+              <li>Всё из тарифа «Простой»</li>
+              <li>До 15 фото, «до и после»</li>
+              <li>Блок с отзывами</li>
+              <li>Добавление в местные сервисы с отзывами</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Поддержка</h3>
+            <div class="price">500–1000 ₽ <small>/ мес</small></div>
+            <ul>
+              <li>Следим, чтобы сайт работал</li>
+              <li>Обновляем цены и фото</li>
+              <li>Мелкие правки текста</li>
+            </ul>
+          </div>
+        </div>
+        <p style="margin-top:20px;color:var(--muted)">Домен (адрес сайта) оплачивается отдельно: 1 000–2 000 ₽ в год.</p>
+      </div>
+    </section>
+
+    <!-- ===== Как работаем ===== -->
+    <section>
+      <div class="container">
+        <h2>Как мы работаем</h2>
+        <div class="grid steps">
+          <div class="card step">
+            <h3>Звонок</h3>
+            <p>Обсуждаем, чем вы занимаетесь и каких клиентов хотите.</p>
+          </div>
+          <div class="card step">
+            <h3>Фото и тексты</h3>
+            <p>Вы присылаете фото работ в мессенджер, тексты мы пишем сами.</p>
+          </div>
+          <div class="card step">
+            <h3>Первый вариант</h3>
+            <p>Показываем сайт и правим его, пока он вам не понравится.</p>
+          </div>
+          <div class="card step">
+            <h3>Запуск</h3>
+            <p>Подключаем домен, добавляем вас в сервисы с отзывами.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Команда ===== -->
+    <section>
+      <div class="container">
+        <h2>Кто мы</h2>
+        <div class="grid">
+          <div class="card">
+            <div class="icon">💻</div>
+            <h3>Разработчик</h3>
+            <p>Делает сайты и доводит их до ума. Первый вариант всегда переделывает, пока не станет хорошо.</p>
+          </div>
+          <div class="card">
+            <div class="icon">📱</div>
+            <h3>Менеджер</h3>
+            <p>Звонит, отвечает на вопросы и проверяет готовый сайт глазами клиента.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Вопросы ===== -->
+    <section>
+      <div class="container">
+        <h2>Частые вопросы</h2>
+        <details>
+          <summary>Я не разбираюсь в технике. Это сложно?</summary>
+          <p>Нет. Вы присылаете фото и рассказываете о работе, всё остальное делаем мы.</p>
+        </details>
+        <details>
+          <summary>За что платить каждый месяц?</summary>
+          <p>Мы следим, чтобы сайт работал и не падал, и обновляем цены и фото, когда вы попросите.</p>
+        </details>
+        <details>
+          <summary>Сколько времени занимает работа?</summary>
+          <p>Обычно несколько дней после того, как вы прислали фото.</p>
+        </details>
+        <details>
+          <summary>Можно сначала посмотреть, как будет выглядеть?</summary>
+          <p>Да. Мы скинем ссылку на пример в мессенджер, и вы сразу увидите, каким будет ваш сайт.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ===== Контакты ===== -->
+    <section id="contact" class="contact">
+      <div class="container">
+        <h2>Свяжитесь с нами</h2>
+        <p class="lead">Позвоните или напишите в удобный мессенджер. Пришлём пример сайта под вашу профессию.</p>
+
+        <a href="tel:+79000000000" class="phone-big">+7 (900) 000-00-00</a><br>
+
+        <a href="tel:+79000000000" class="btn btn-call" style="margin-bottom:24px">📞 Позвонить</a>
+
+        <div class="socials">
+          <a class="social wa" href="https://wa.me/79000000000" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.2z"/></svg>
+            WhatsApp
+          </a>
+          <a class="social tg" href="https://t.me/+79000000000" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M21.9 4.3 18.7 19.5c-.2 1-.9 1.3-1.7.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.6 13.2 1.9 11.7c-1-.3-1-1 .2-1.5l18.4-7.1c.9-.3 1.6.2 1.4 1.2z"/></svg>
+            Telegram
+          </a>
+          <a class="social vb" href="viber://chat?number=%2B79000000000">
+            <svg viewBox="0 0 24 24"><path d="M11.4 1C8.5 1 3.6 1.5 1.9 6.4c-.9 2.6-.9 6.1-.1 8.6.6 1.9 1.9 3.3 3.6 4v3.1c0 .7.8 1 1.3.5l2.6-2.9c.7.1 1.4.1 2.1.1 2.9 0 7.8-.5 9.5-5.4.9-2.6.9-6.1 0-8.6C19.2 1.5 14.3 1 11.4 1zm4.7 13.8c-.4.6-1.2 1.1-1.9.9-2.9-.9-5.6-3.3-6.8-6.2-.3-.7.2-1.5.8-1.9.4-.3.9-.3 1.2.1l1 1.3c.3.4.2.9-.1 1.2l-.4.3c.6 1.4 1.7 2.5 3.1 3.1l.3-.4c.3-.4.8-.4 1.2-.1l1.3 1c.4.2.5.7.3 1.1z"/></svg>
+            Viber
+          </a>
+          <a class="social sms" href="sms:+79000000000">
+            <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM7 11H5V9h2v2zm4 0H9V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z"/></svg>
+            SMS
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">© 2026 Мастер.Сайт · Сайты для частных мастеров</div>
+  </footer>
+
+  <!-- Кнопка «Позвонить», которая всегда видна на телефоне -->
+  <a href="tel:+79000000000" class="btn btn-call sticky-call">📞 Позвонить</a>
+
+  <script>
+    // Переключение тем: белая → чёрная → серая
+    (function () {
+      var themes = ["light", "dark", "gray"];
+      var labels = { light: "☀️ Белая", dark: "🌙 Чёрная", gray: "🌫️ Серая" };
+      var root = document.documentElement;
+      var btn = document.getElementById("themeToggle");
+
+      function apply(theme) {
+        root.setAttribute("data-theme", theme);
+        btn.textContent = labels[theme];
+        try { localStorage.setItem("theme", theme); } catch (e) {}
+      }
+
+      var saved = null;
+      try { saved = localStorage.getItem("theme"); } catch (e) {}
+      apply(themes.indexOf(saved) !== -1 ? saved : "light");
+
+      btn.addEventListener("click", function () {
+        var current = root.getAttribute("data-theme");
+        var next = themes[(themes.indexOf(current) + 1) % themes.length];
+        apply(next);
+      });
+    })();
+  </script>
+</body>
+</html>
